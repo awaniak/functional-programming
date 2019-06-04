@@ -6,7 +6,7 @@ print("Zad 1")
 print("a")
 def exist[A](xs: List[A])(p: A => Boolean): Boolean =
   xs match {
-    case h::t => if (p(h)) true else exist(t)(p)
+    case h::t =>  (p(h)) || exist(t)(p)
     case Nil => false
   }
 
@@ -50,13 +50,13 @@ print("a")
 def  remove1[A](xs: List[A])(p: A => Boolean): List[A] =
   xs match {
     case h :: t => if (p(h)) t else h :: remove1(t)(p)
-    case _ => Nil
+    case Nil => Nil
   }
 
 
 remove1(List(1,2,3,2,5)) (_ == 2) == List(1, 3, 2, 5)
 remove1(List(1,2,3,2,5)) (_ == 6) == List(1,2,3,2,5)
-remove1Rec(List(1,5,6,7,8,9)) (_ == 7) == List(1, 5, 6, 8, 9)
+remove1(List(1,5,6,7,8,9)) (_ == 7) == List(1, 5, 6, 8, 9)
 remove1(List()) (_ == 6) == List()
 
 print("b")
@@ -64,8 +64,8 @@ print("b")
 def  remove1Rec[A](xs: List[A])(p: A => Boolean): List[A] = {
   def inner[A](xs: List[A], acc: List[A])(p: A => Boolean): List[A] = {
     xs match {
-      case h :: t => if (p(h)) acc.reverse ::: t else  inner(t, h :: acc)(p)
-      case _ => acc.reverse
+      case h :: t => if (p(h)) t.reverse_:::(acc) else  inner(t, h :: acc)(p)
+      case Nil => acc.reverse
     }
 
   }
@@ -83,12 +83,12 @@ remove1Rec(List()) (_ == 6) == List()
 print("Zad 4")
 
 def splitAt[A](xs:List[A])(n:Int):(List[A],List[A]) = {
-  def splitAtAcc(xs: List[A])(acc1: List[A], acc2: List[A])(n: Int): (List[A], List[A]) =
+  def splitAtAcc(xs: List[A])(acc: List[A])(n: Int): (List[A], List[A]) =
     xs match {
-      case h :: t if n > 0 => splitAtAcc(t)(h::acc1, acc2)(n-1)
-      case _ => (acc1.reverse, xs)
+      case h :: t => if (n > 0) splitAtAcc(t)(h::acc)(n-1) else (acc.reverse, xs)
+      case Nil => (acc.reverse, xs)
     }
-  splitAtAcc(xs)(List(), List())(n)
+  splitAtAcc(xs)(List())(n)
 }
 
 
